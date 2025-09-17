@@ -7,21 +7,10 @@
 set -e
 
 main() {
-    install_rclone_if_not_installed
-    check_remote_exists || configure_onedrive
-}
-
-install_rclone_if_not_installed() {
-    if ! command -v rclone >/dev/null 2>&1; then
-        sudo pacman -S rclone --noconfirm
-    fi
-}
-
-check_remote_exists() {
-    if rclone listremotes | grep -q "^$REMOTE_NAME:$"; then
+    if util_check_rclone_remote_exists; then
         log_ok "Rclone remote '$REMOTE_NAME' is already configured."
     else
-        return 1
+        configure_onedrive
     fi
 }
 

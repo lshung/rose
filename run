@@ -8,7 +8,6 @@ main() {
     source_environment_variables
     source_app_config_if_exists
     source_utility_functions
-    create_symlink_to_this_app
     parse_arguments "$@"
 }
 
@@ -30,10 +29,6 @@ source_utility_functions() {
     done
 }
 
-create_symlink_to_this_app() {
-    ln -sf "$APP_DIR"/run "$HOME/.local/bin/$APP_NAME_LOWER"
-}
-
 parse_arguments() {
     if [[ $# -eq 0 ]]; then
         show_usage
@@ -45,9 +40,11 @@ parse_arguments() {
                 exit 0
                 ;;
             -c|--config)
+                source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/config.sh" "$@"
                 ;;
             -t|--test)
+                source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/test.sh" "$@"
                 ;;
             *)
