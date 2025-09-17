@@ -43,6 +43,10 @@ parse_arguments() {
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/config.sh" "$@"
                 ;;
+            -l|--log)
+                source "$APP_MODULES_DIR/init.sh" "$@"
+                source "$APP_MODULES_DIR/log.sh" "$@"
+                ;;
             -s|--sync)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/sync.sh" "$@"
@@ -66,6 +70,7 @@ show_usage() {
     echo "Options:"
     echo "  -h, --help          Show help"
     echo "  -c, --config        Config Rclone"
+    echo "  -l, --log           Perform some log-related operations"
     echo "  -s, --sync          Sync contents"
     echo "  -t, --test          Test connection"
 }
