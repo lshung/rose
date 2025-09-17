@@ -11,6 +11,12 @@ APP_CONFIG_FILE="$APP_CONFIG_DIR/$APP_NAME_LOWER.conf"
 
 # Application paths
 APP_MODULES_DIR="$APP_DIR/modules"
+APP_UTILS_DIR="$APP_DIR/utils"
+
+# Log
+LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/$APP_NAME_LOWER"
+LOG_FILE="$LOG_DIR/$(date +%Y-%m-%d-%H-%M-%S).log"
+LOG_FILE_COUNT=30
 
 # Root paths
 LOCAL_ROOT_DIR="$HOME/$APP_NAME_CAPITAL"

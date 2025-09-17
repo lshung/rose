@@ -19,7 +19,7 @@ install_rclone_if_not_installed() {
 
 check_remote_exists() {
     if rclone listremotes | grep -q "^$REMOTE_NAME:$"; then
-        echo "Rclone remote '$REMOTE_NAME' is already configured."
+        log_ok "Rclone remote '$REMOTE_NAME' is already configured."
     else
         return 1
     fi
@@ -29,9 +29,9 @@ configure_onedrive() {
     rclone config create "$REMOTE_NAME" onedrive
 
     if [ $? -eq 0 ]; then
-        echo "OneDrive configuration completed successfully!"
+        log_ok "OneDrive configuration completed successfully!"
     else
-        echo "Configuration failed. Please check your internet connection and try again." 1>&2
+        log_failed "Configuration failed. Please check your internet connection and try again."
         return 1
     fi
 }

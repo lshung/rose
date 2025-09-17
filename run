@@ -7,6 +7,7 @@ main() {
     get_directory_of_this_app
     source_environment_variables
     source_app_config_if_exists
+    source_utility_functions
     create_symlink_to_this_app
     parse_arguments "$@"
 }
@@ -21,6 +22,12 @@ source_environment_variables() {
 
 source_app_config_if_exists() {
     [ -r "$APP_CONFIG_FILE" ] && source "$APP_CONFIG_FILE" || true
+}
+
+source_utility_functions() {
+    for file in "$APP_UTILS_DIR"/*; do
+        [[ -r "$file" ]] && source "$file"
+    done
 }
 
 create_symlink_to_this_app() {

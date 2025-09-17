@@ -12,9 +12,9 @@ main() {
 
 test_connection() {
     if rclone lsd "$REMOTE_NAME:"; then
-        echo "Connection test successful!"
+        log_ok "Connection test successful!"
     else
-        echo "Connection test failed. Please check your configuration." 1>&2
+        log_failed "Connection test failed. Please check your configuration."
         return 1
     fi
 }
