@@ -40,6 +40,9 @@ parse_arguments() {
             -c|--config)
                 source "$APP_MODULES_DIR/config.sh" "$@"
                 ;;
+            -t|--test)
+                source "$APP_MODULES_DIR/test.sh" "$@"
+                ;;
             *)
                 echo "Error: Invalid option '$1'"
                 show_usage
@@ -55,6 +58,7 @@ show_usage() {
     echo "Options:"
     echo "  -h, --help          Show help"
     echo "  -c, --config        Config Rclone"
+    echo "  -t, --test          Test connection"
 }
 
 # Call main function with arguments
