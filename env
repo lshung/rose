@@ -1,0 +1,9 @@
+# This file stores the default environment variables of the application
+# DO NOT modify anything here
+# The variables can be overridden in the ~/.config/rose/rose.conf file
+
+# Application
+APP_NAME="ROSE"
+APP_NAME_LOWER="rose"
+APP_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/$APP_NAME_LOWER"
+APP_CONFIG_FILE="$APP_CONFIG_DIR/$APP_NAME_LOWER.conf"
