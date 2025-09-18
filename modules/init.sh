@@ -9,9 +9,11 @@ set -e
 main() {
     create_log_dir_if_not_exists
     create_local_root_dir_if_not_exists
+    create_local_backup_dir_if_not_exists
     create_symlink_to_this_app_if_not_exists
     install_rclone_if_not_installed
     util_clean_up_log_files
+    util_concatenate_filter_rules
 
     if [[ "$1" != "-c" ]] && [[ "$1" != "--config" ]]; then
         show_warning_if_rclone_remote_is_not_configured
@@ -33,6 +35,19 @@ create_local_root_dir_if_not_exists() {
         log_ok "Local root directory created successfully!"
     else
         log_failed "Failed to create local root directory."
+        return 1
+    fi
+}
+
+create_local_backup_dir_if_not_exists() {
+    [ -d "$LOCAL_BACKUP_DIR" ] && return 0
+
+    log_info "Creating local backup directory: $LOCAL_BACKUP_DIR"
+
+    if mkdir -p "$LOCAL_BACKUP_DIR"; then
+        log_ok "Local backup directory created successfully!"
+    else
+        log_failed "Failed to create local backup directory."
         return 1
     fi
 }

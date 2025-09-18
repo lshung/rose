@@ -102,7 +102,7 @@ synchronize_from_local_to_remote() {
 }
 
 simulate_synchronization_from_local_to_remote() {
-    local flags="--verbose --checksum --backup-dir=$REMOTE_BACKUP_DIR/$TIMESTAMP --dry-run"
+    local flags="--verbose --checksum --backup-dir=$REMOTE_BACKUP_DIR/$TIMESTAMP --filter-from=$TEMP_FILTER_RULES_FILE --dry-run"
 
     log_info "Starting dry-run synchronization"
 
@@ -116,7 +116,7 @@ simulate_synchronization_from_local_to_remote() {
 }
 
 execute_synchronization_from_local_to_remote() {
-    local flags="--verbose --checksum --backup-dir=$REMOTE_BACKUP_DIR/$TIMESTAMP"
+    local flags="--verbose --checksum --backup-dir=$REMOTE_BACKUP_DIR/$TIMESTAMP --filter-from=$TEMP_FILTER_RULES_FILE"
 
     log_info "Starting live synchronization"
 
@@ -145,7 +145,7 @@ synchronize_from_remote_to_local() {
 }
 
 simulate_synchronization_from_remote_to_local() {
-    local flags="--verbose --checksum --backup-dir=$LOCAL_BACKUP_DIR/$TIMESTAMP --dry-run"
+    local flags="--verbose --checksum --backup-dir=$LOCAL_BACKUP_DIR/$TIMESTAMP --filter-from=$TEMP_FILTER_RULES_FILE --dry-run"
 
     log_info "Starting dry-run synchronization"
 
@@ -159,7 +159,7 @@ simulate_synchronization_from_remote_to_local() {
 }
 
 execute_synchronization_from_remote_to_local() {
-    local flags="--verbose --checksum --backup-dir=$LOCAL_BACKUP_DIR/$TIMESTAMP"
+    local flags="--verbose --checksum --backup-dir=$LOCAL_BACKUP_DIR/$TIMESTAMP --filter-from=$TEMP_FILTER_RULES_FILE"
 
     log_info "Starting live synchronization"
 

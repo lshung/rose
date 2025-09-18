@@ -1,0 +1,25 @@
+# Rclone filter rules to exclude or include files or directories when synchronizing
+# Syntax: lines starting with '-' are excluded, '+' included, '#' comments
+
+# Version control
+- **/.git/**
+- **/.svn/**
+- **/.hg/**
+- **/.bzr/**
+
+# NodeJS
+- **/node_modules/**
+- **/.npm/**
+- **/.yarn/cache/**
+
+# Python
+- **/__pycache__/**
+- **/.venv/**
+- **/.mypy_cache/**
+- **/.pytest_cache/**
+- **/*.pyc
+- **/*.pyo
+
+# OS junk
+- **/.DS_Store
+- **/Thumbs.db
