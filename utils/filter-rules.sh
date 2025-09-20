@@ -7,11 +7,11 @@
 set -e
 
 util_concatenate_filter_rules() {
-    mkdir -p "$(dirname "$TEMP_FILTER_RULES_FILE")"
+    mkdir -p "$(dirname "$FILTER_RULES_FILE")"
 
-    cat "$APP_FILTER_RULES_FILE" > "$TEMP_FILTER_RULES_FILE"
+    cat "$APP_FILTER_RULES_FILE" > "$FILTER_RULES_FILE"
 
     if [ -r "$APP_CONFIG_FILTER_RULES_FILE" ]; then
-        cat "$APP_CONFIG_FILTER_RULES_FILE" >> "$TEMP_FILTER_RULES_FILE"
+        cat "$APP_CONFIG_FILTER_RULES_FILE" >> "$FILTER_RULES_FILE"
     fi
 }

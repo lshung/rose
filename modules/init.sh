@@ -59,7 +59,7 @@ create_symlink_to_this_app_if_not_exists() {
 
     log_info "Creating symlink to this app: $app_symlink_path"
 
-    if ln -sf "$APP_DIR"/run "$app_symlink_path"; then
+    if mkdir -p "$(dirname "$app_symlink_path")" && ln -sf "$APP_DIR"/run "$app_symlink_path"; then
         log_ok "Symlink created successfully!"
     else
         log_failed "Failed to create symlink."
