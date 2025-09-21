@@ -20,6 +20,7 @@ FILTER_RULES_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/$APP_NAME_LOWER/filter-
 
 # Reports
 CHECK_REPORT_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/$APP_NAME_LOWER/check-report.txt"
+CHECK_REPORT_REMOVE_IDENTICAL="yes"
 
 # Log
 LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/$APP_NAME_LOWER/logs"

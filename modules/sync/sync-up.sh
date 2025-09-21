@@ -7,20 +7,12 @@
 set -e
 
 main() {
-    declare_variables
-    synchronize
-}
-
-declare_variables() {
-    TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
-}
-
-synchronize() {
     log_info "Synchonizing from local to remote: $LOCAL_ROOT_DIR -> $REMOTE_ROOT_DIR"
     log_info "Remote backup directory: $REMOTE_BACKUP_DIR/$TIMESTAMP"
 
     if [ "$CHECK" = "yes" ]; then
         run_check_before_synchronization
+        generate_custom_check_report || return 1
         confirm_to_synchronize || return 1
     fi
 
@@ -35,10 +27,27 @@ run_check_before_synchronization() {
     cat "$CHECK_REPORT_FILE" | sort > "$CHECK_REPORT_FILE.sorted"
     mv "$CHECK_REPORT_FILE.sorted" "$CHECK_REPORT_FILE"
 
-    log_warning "Please review the report carefully before confirmation."
+    if [[ "$CHECK_REPORT_REMOVE_IDENTICAL" == "yes" ]]; then
+        remove_identical_paths_from_check_report_file
+    fi
+}
+
+remove_identical_paths_from_check_report_file() {
+    grep -v '^=' "$CHECK_REPORT_FILE" > "$CHECK_REPORT_FILE.filtered"
+    mv "$CHECK_REPORT_FILE.filtered" "$CHECK_REPORT_FILE"
+}
+
+generate_custom_check_report() {
+    log_info "Generating custom check report"
+
+    if ! python3 "$APP_MODULES_DIR/sync/check-report.py" "up" "$CHECK_REPORT_FILE" "$TERMINAL_WIDTH" > >(tee -a "$LOG_FILE") 2>&1; then
+        log_error "Could not generate custom check report"
+        return 1
+    fi
 }
 
 confirm_to_synchronize() {
+    log_warning "Please review the report carefully before confirmation."
     read -p "Do you want to continue to synchronize from local to remote? (y/n) " confirmation
     if [[ "$confirmation" != "y" ]]; then
         log_info "Synchronization cancelled by user."

@@ -11,6 +11,7 @@ main() {
     shift
     parse_arguments "$@"
     validate_arguments
+    validate_terminal_width
     synchronize
 }
 
@@ -19,6 +20,7 @@ declare_variables() {
     DIRECTION="$SYNC_DIRECTION"
     CHECK="$SYNC_CHECK"
     TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
+    TERMINAL_WIDTH=$(tput cols)
 }
 
 parse_arguments() {
@@ -73,6 +75,13 @@ validate_sync_check_argument() {
     if [[ "$CHECK" != "yes" ]] && [[ "$CHECK" != "no" ]]; then
         log_error "Invalid synchronization check value '$CHECK'"
         show_usage
+        return 1
+    fi
+}
+
+validate_terminal_width() {
+    if [[ "$TERMINAL_WIDTH" -lt 100 ]]; then
+        log_error "Terminal width is too small, please increase it to at least 100"
         return 1
     fi
 }
