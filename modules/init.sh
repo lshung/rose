@@ -8,7 +8,7 @@ set -e
 
 main() {
     create_log_dir_if_not_exists
-    create_local_root_dir_if_not_exists
+    create_local_root_dirs_if_not_exists
     create_local_backup_dir_if_not_exists
     create_symlink_to_this_app_if_not_exists
     install_rclone_if_not_installed
@@ -26,15 +26,24 @@ create_log_dir_if_not_exists() {
     log_ok "Log directory created successfully!"
 }
 
+create_local_root_dirs_if_not_exists() {
+    for directory_pair in "${ROOT_DIRS[@]}"; do
+        local local_root_dir="$(echo "$directory_pair" | cut -d',' -f1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+        create_local_root_dir_if_not_exists "$local_root_dir"
+    done
+}
+
 create_local_root_dir_if_not_exists() {
-    [ -d "$LOCAL_ROOT_DIR" ] && return 0
+    local local_root_dir="$1"
 
-    log_info "Creating local root directory: $LOCAL_ROOT_DIR"
+    [ -d "$local_root_dir" ] && return 0
 
-    if mkdir -p "$LOCAL_ROOT_DIR"; then
-        log_ok "Local root directory created successfully!"
+    log_info "Creating local root directory '$local_root_dir'..."
+
+    if mkdir -p "$local_root_dir"; then
+        log_ok "Created local root directory '$local_root_dir' successfully."
     else
-        log_failed "Failed to create local root directory."
+        log_failed "Failed to create local root directory '$local_root_dir'."
         return 1
     fi
 }

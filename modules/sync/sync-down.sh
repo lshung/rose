@@ -11,9 +11,10 @@ main() {
     log_info "Local backup directory: $LOCAL_BACKUP_DIR/$TIMESTAMP"
 
     if [ "$CHECK" = "yes" ]; then
-        run_check_before_synchronization
+        run_check_before_synchronization || return 1
+        util_is_check_report_not_empty || { log_info "Check report is empty, no need to synchronize."; return 0; }
         generate_custom_check_report || return 1
-        confirm_to_synchronize || return 1
+        confirm_to_synchronize || return 0
     fi
 
     execute_real_synchronization
@@ -23,7 +24,14 @@ run_check_before_synchronization() {
     log_info "Starting rclone check"
     log_warning "This may take a while, please wait patiently."
 
+    rm -f "$CHECK_REPORT_FILE"
     rclone check "$REMOTE_ROOT_DIR" "$LOCAL_ROOT_DIR" --filter-from="$FILTER_RULES_FILE" --combined "$CHECK_REPORT_FILE" >/dev/null 2>&1 || true
+
+    if [ ! -f "$CHECK_REPORT_FILE" ]; then
+        log_error "There was an error when running 'rclone check'."
+        return 1
+    fi
+
     cat "$CHECK_REPORT_FILE" | sort > "$CHECK_REPORT_FILE.sorted"
     mv "$CHECK_REPORT_FILE.sorted" "$CHECK_REPORT_FILE"
 

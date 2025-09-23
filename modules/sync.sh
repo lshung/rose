@@ -87,6 +87,18 @@ validate_terminal_width() {
 }
 
 synchronize() {
+    for ((i = 0; i < ${#ROOT_DIRS[@]}; i++)); do
+        local directory_pair="${ROOT_DIRS[$i]}"
+        LOCAL_ROOT_DIR="$(echo "$directory_pair" | cut -d',' -f1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+        REMOTE_ROOT_DIR="$(echo "$directory_pair" | cut -d',' -f2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
+        if [[ "$i" -gt 0 ]]; then echo ""; fi
+
+        synchronize_with_single_directory_pair || return 1
+    done
+}
+
+synchronize_with_single_directory_pair() {
     if [[ "$DIRECTION" == "up" ]]; then
         source "$APP_MODULES_DIR/sync/sync-up.sh" || return 1
     elif [[ "$DIRECTION" == "down" ]]; then
