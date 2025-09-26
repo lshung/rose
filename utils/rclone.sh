@@ -16,3 +16,7 @@ util_install_rclone() {
 util_check_rclone_remote_exists() {
     rclone listremotes 2>/dev/null | grep -q "^$REMOTE_NAME:$"
 }
+
+util_get_all_rclone_providers() {
+    rclone config providers | jq -r '.[] | "\(.Name)"' | sort
+}
