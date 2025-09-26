@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Exit if this script is being executed directly
-[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31mERR\033[0m] This script cannot be executed directly" 1>&2; exit 1; }
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31m ERRO \033[0m] This script cannot be executed directly." 1>&2; exit 1; }
 
-# Exit on error
-set -e
+set -euo pipefail
 
 main() {
     declare_variables "$@"
@@ -36,7 +35,7 @@ parse_arguments() {
                 exit 0
                 ;;
             *)
-                log_error "Invalid option '$1'"
+                log_error "Invalid option '$1'."
                 show_usage
                 exit 1
                 ;;
@@ -49,14 +48,14 @@ show_usage() {
     echo "Usage: $APP_NAME_LOWER $MODULE [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  -h, --help                  Show help"
-    echo "  -d, --dir                   Show the log directory"
-    echo "  -l, --last                  View the last log file"
-    echo "  -r, --remove                Remove all log files"
+    echo "    -h, --help        Show help"
+    echo "    -d, --dir         Show the log directory path"
+    echo "    -l, --last        View the last log file"
+    echo "    -r, --remove      Remove all log files"
 }
 
 show_log_directory() {
-    echo "The log directory is: $LOG_DIR"
+    log_info "The log directory is located at '$LOG_DIR'."
 }
 
 view_last_log_file() {

@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Exit if this script is being executed directly
-[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31mERR\033[0m] This script cannot be executed directly" 1>&2; exit 1; }
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31m ERRO \033[0m] This script cannot be executed directly." 1>&2; exit 1; }
 
-# Exit on error
-set -e
+set -euo pipefail
 
 main() {
     create_log_dir_if_not_exists
@@ -15,7 +14,7 @@ main() {
     util_clean_up_log_files
     util_concatenate_filter_rules
 
-    if [[ "$1" != "-c" ]] && [[ "$1" != "--config" ]]; then
+    if [[ "$1" != "config" ]]; then
         show_warning_if_rclone_remote_is_not_configured
     fi
 }
@@ -23,7 +22,7 @@ main() {
 create_log_dir_if_not_exists() {
     [ -d "$LOG_DIR" ] && return 0
     mkdir -p "$LOG_DIR"
-    log_ok "Log directory created successfully!"
+    log_ok "Created log directory successfully."
 }
 
 create_local_root_dirs_if_not_exists() {
@@ -41,9 +40,9 @@ create_local_root_dir_if_not_exists() {
     log_info "Creating local root directory '$local_root_dir'..."
 
     if mkdir -p "$local_root_dir"; then
-        log_ok "Created local root directory '$local_root_dir' successfully."
+        log_ok "Created local root directory successfully."
     else
-        log_failed "Failed to create local root directory '$local_root_dir'."
+        log_failed "Created local root directory failed."
         return 1
     fi
 }
@@ -51,12 +50,12 @@ create_local_root_dir_if_not_exists() {
 create_local_backup_dir_if_not_exists() {
     [ -d "$LOCAL_BACKUP_DIR" ] && return 0
 
-    log_info "Creating local backup directory: $LOCAL_BACKUP_DIR"
+    log_info "Creating local backup directory '$LOCAL_BACKUP_DIR'..."
 
     if mkdir -p "$LOCAL_BACKUP_DIR"; then
-        log_ok "Local backup directory created successfully!"
+        log_ok "Created local backup directory successfully."
     else
-        log_failed "Failed to create local backup directory."
+        log_failed "Created local backup directory failed."
         return 1
     fi
 }
@@ -66,12 +65,12 @@ create_symlink_to_this_app_if_not_exists() {
 
     [ -f "$app_symlink_path" ] && return 0
 
-    log_info "Creating symlink to this app: $app_symlink_path"
+    log_info "Creating symlink to this app at '$app_symlink_path'..."
 
     if mkdir -p "$(dirname "$app_symlink_path")" && ln -sf "$APP_DIR"/run "$app_symlink_path"; then
-        log_ok "Symlink created successfully!"
+        log_ok "Created symlink successfully."
     else
-        log_failed "Failed to create symlink."
+        log_failed "Created symlink failed."
         return 1
     fi
 
@@ -80,20 +79,19 @@ create_symlink_to_this_app_if_not_exists() {
 install_rclone_if_not_installed() {
     util_check_rclone_installed && return 0
 
-    log_info "Installing Rclone"
+    log_info "Installing Rclone..."
 
     if util_install_rclone; then
-        log_ok "Rclone installed successfully!"
+        log_ok "Installed Rclone successfully."
     else
-        log_failed "Failed to install Rclone."
+        log_failed "Installed Rclone failed."
         return 1
     fi
 }
 
 show_warning_if_rclone_remote_is_not_configured() {
     if ! util_check_rclone_remote_exists; then
-        log_warning "Rclone remote '$REMOTE_NAME' is not configured."
-        log_warning "Please run: 'rose --config' to configure it."
+        log_warning "Rclone remote '$REMOTE_NAME' is not configured. Please run 'rose --config' to configure it."
         return 1
     fi
 }

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Exit on error
-set -e
+set -euo pipefail
 
 main() {
     get_directory_of_this_app
@@ -39,28 +38,28 @@ parse_arguments() {
                 show_usage
                 exit 0
                 ;;
-            -b|--backup)
+            backup)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/backup.sh" "$@"
                 ;;
-            -c|--config)
+            config)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/config.sh" "$@"
                 ;;
-            -l|--log)
+            log)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/log.sh" "$@"
                 ;;
-            -s|--sync)
+            sync)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/sync.sh" "$@"
                 ;;
-            -t|--test)
+            test)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/test.sh" "$@"
                 ;;
             *)
-                echo "Error: Invalid option '$1'"
+                log_error "Error: Invalid option '$1'."
                 show_usage
                 exit 1
                 ;;
@@ -69,15 +68,17 @@ parse_arguments() {
 }
 
 show_usage() {
-    echo "Usage: $APP_NAME_LOWER [OPTIONS]"
+    echo "Usage: $APP_NAME_LOWER [MODULE] [OPTIONS]"
+    echo ""
+    echo "Modules:"
+    echo "    backup        List and delete backup files"
+    echo "    config        Config Rclone remote"
+    echo "    log           Perform some log-related operations"
+    echo "    sync          Sync contents up or down"
+    echo "    test          Test connection to Rclone remote"
     echo ""
     echo "Options:"
-    echo "  -h, --help          Show help"
-    echo "  -b, --backup        List and delete backup files"
-    echo "  -c, --config        Config Rclone"
-    echo "  -l, --log           Perform some log-related operations"
-    echo "  -s, --sync          Sync contents"
-    echo "  -t, --test          Test connection"
+    echo "    -h, --help          Show help"
 }
 
 # Call main function with arguments

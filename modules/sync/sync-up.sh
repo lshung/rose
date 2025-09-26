@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # Exit if this script is being executed directly
-[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31mERR\033[0m] This script cannot be executed directly" 1>&2; exit 1; }
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31m ERRO \033[0m] This script cannot be executed directly." 1>&2; exit 1; }
 
-# Exit on error
-set -e
+set -euo pipefail
 
 main() {
-    log_info "Synchonizing from local to remote: $LOCAL_ROOT_DIR -> $REMOTE_ROOT_DIR"
-    log_info "Remote backup directory: $REMOTE_BACKUP_DIR/$TIMESTAMP"
+    log_info "Synchronizing from local to remote: '$LOCAL_ROOT_DIR' -> '$REMOTE_ROOT_DIR'..."
+    log_info "Remote backup directory is located at '$REMOTE_BACKUP_DIR/$TIMESTAMP'."
 
     if [ "$CHECK" = "yes" ]; then
         run_check_before_synchronization || return 1
@@ -21,7 +20,7 @@ main() {
 }
 
 run_check_before_synchronization() {
-    log_info "Starting rclone check"
+    log_info "Starting command 'rclone check'..."
     log_warning "This may take a while, please wait patiently."
 
     rm -f "$CHECK_REPORT_FILE"
@@ -49,7 +48,7 @@ generate_custom_check_report() {
     log_info "Generating custom check report"
 
     if ! python3 "$APP_MODULES_DIR/sync/check-report.py" "up" "$CHECK_REPORT_FILE" "$TERMINAL_WIDTH" > >(tee -a "$LOG_FILE") 2>&1; then
-        log_error "Could not generate custom check report"
+        log_error "Could not generate custom check report."
         return 1
     fi
 }
@@ -66,7 +65,7 @@ confirm_to_synchronize() {
 execute_real_synchronization() {
     local flags="--verbose --checksum --backup-dir=$REMOTE_BACKUP_DIR/$TIMESTAMP --filter-from=$FILTER_RULES_FILE"
 
-    log_info "Starting live synchronization"
+    log_info "Starting live synchronization..."
 
     if rclone sync "$LOCAL_ROOT_DIR" "$REMOTE_ROOT_DIR" $flags > >(tee -a "$LOG_FILE") 2>&1; then
         log_ok "Live synchronization completed."

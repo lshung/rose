@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Exit if this script is being executed directly
-[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31mERR\033[0m] This script cannot be executed directly" 1>&2; exit 1; }
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || { echo -e "[\033[31m ERRO \033[0m] This script cannot be executed directly." 1>&2; exit 1; }
 
-# Exit on error
-set -e
+set -euo pipefail
 
 main() {
     declare_variables "$@"
@@ -34,13 +33,13 @@ parse_arguments() {
                 current_arg="$1"
                 shift
                 DIRECTION="${1:-}"
-                [[ -z "$DIRECTION" ]] && { log_error "Option $current_arg requires a value"; show_usage; exit 1; }
+                [[ -z "$DIRECTION" ]] && { log_error "Option '$current_arg' requires a value."; show_usage; exit 1; }
                 ;;
             -n|--no-check)
                 CHECK="no"
                 ;;
             *)
-                log_error "Invalid option '$1'"
+                log_error "Invalid option '$1'."
                 show_usage
                 exit 1
                 ;;
@@ -53,9 +52,9 @@ show_usage() {
     echo "Usage: $APP_NAME_LOWER $MODULE [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  -h, --help                  Show help"
-    echo "  -d, --direction VALUE       Use 'up' or 'down', default is 'up'"
-    echo "  -n, --no-check              Synchronize without check (use at your own risk)"
+    echo "    -h, --help                    Show help"
+    echo "    -d, --direction VALUE         Use 'up' or 'down', default is 'up'"
+    echo "    -n, --no-check                Synchronize without check (use at your own risk)"
 }
 
 validate_arguments() {
@@ -65,7 +64,7 @@ validate_arguments() {
 
 validate_sync_direction_argument() {
     if [[ "$DIRECTION" != "up" ]] && [[ "$DIRECTION" != "down" ]]; then
-        log_error "Invalid synchronization direction value '$DIRECTION'"
+        log_error "Invalid synchronization direction value '$DIRECTION'."
         show_usage
         return 1
     fi
@@ -73,7 +72,7 @@ validate_sync_direction_argument() {
 
 validate_sync_check_argument() {
     if [[ "$CHECK" != "yes" ]] && [[ "$CHECK" != "no" ]]; then
-        log_error "Invalid synchronization check value '$CHECK'"
+        log_error "Invalid synchronization check value '$CHECK'."
         show_usage
         return 1
     fi
@@ -81,7 +80,7 @@ validate_sync_check_argument() {
 
 validate_terminal_width() {
     if [[ "$TERMINAL_WIDTH" -lt 100 ]]; then
-        log_error "Terminal width is too small, please increase it to at least 100"
+        log_error "Terminal width is too small, please increase it to at least 100."
         return 1
     fi
 }
