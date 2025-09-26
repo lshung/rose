@@ -39,6 +39,10 @@ parse_arguments() {
                 show_usage
                 exit 0
                 ;;
+            -b|--backup)
+                source "$APP_MODULES_DIR/init.sh" "$@"
+                source "$APP_MODULES_DIR/backup.sh" "$@"
+                ;;
             -c|--config)
                 source "$APP_MODULES_DIR/init.sh" "$@"
                 source "$APP_MODULES_DIR/config.sh" "$@"
@@ -69,6 +73,7 @@ show_usage() {
     echo ""
     echo "Options:"
     echo "  -h, --help          Show help"
+    echo "  -b, --backup        List and delete backup files"
     echo "  -c, --config        Config Rclone"
     echo "  -l, --log           Perform some log-related operations"
     echo "  -s, --sync          Sync contents"
