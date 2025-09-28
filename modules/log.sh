@@ -34,6 +34,10 @@ parse_arguments() {
                 remove_all_log_files
                 exit 0
                 ;;
+            -s|--select)
+                select_log_file
+                exit 0
+                ;;
             *)
                 log_error "Invalid option '$1'."
                 show_usage
@@ -52,17 +56,18 @@ show_usage() {
     echo "    -d, --dir         Show the log directory path"
     echo "    -l, --last        View the last log file"
     echo "    -r, --remove      Remove all log files"
+    echo "    -s, --select      Select a log file to view"
 }
 
 show_log_directory() {
-    log_info "The log directory is located at '$LOG_DIR'."
+    log_info "The log directory is located at '$LOG_DIR'." "no"
 }
 
 view_last_log_file() {
     local last_log_file=$(ls -t "$LOG_DIR"/*.log 2>/dev/null | head -n 1)
 
     if [ -z "$last_log_file" ]; then
-        log_error "No log files found in '$LOG_DIR'."
+        log_error "No log files found in '$LOG_DIR'." "no"
         return 1
     fi
 
@@ -71,6 +76,19 @@ view_last_log_file() {
 
 remove_all_log_files() {
     rm -f "$LOG_DIR"/*.log
+}
+
+select_log_file() {
+    local log_files_list=($(ls -t "$LOG_DIR"/*.log 2>/dev/null | sed "s|^$LOG_DIR/||"))
+
+    if [ ${#log_files_list[@]} -eq 0 ]; then
+        log_error "No log files found in '$LOG_DIR'." "no"
+        return 1
+    fi
+
+    local selected_log_file=$(util_select_from_list "${log_files_list[@]}")
+
+    cat "$LOG_DIR/$selected_log_file"
 }
 
 main "$@"

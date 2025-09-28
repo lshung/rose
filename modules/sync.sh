@@ -91,7 +91,7 @@ synchronize() {
         LOCAL_ROOT_DIR="$(echo "$directory_pair" | cut -d',' -f1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
         REMOTE_ROOT_DIR="$(echo "$directory_pair" | cut -d',' -f2 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
-        if [[ "$i" -gt 0 ]]; then echo ""; fi
+        if [[ "$i" -gt 0 ]]; then log_empty_line; fi
 
         synchronize_with_single_directory_pair || return 1
     done

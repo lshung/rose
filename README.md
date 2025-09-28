@@ -176,6 +176,7 @@ The path provided for `rose backup --delete` does not contain the value of $REMO
 rose log --dir       # Show the log directory path
 rose log --last      # Print content of the last log file
 rose log --remove    # Remove all log files
+rose log --select    # Select a log file from the menu to view
 ```
 
 

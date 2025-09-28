@@ -135,7 +135,7 @@ delete_backup_on_remote() {
     check_if_backup_path_exists_on_remote || return 1
     confirm_to_delete || return 0
 
-    if rclone delete "$FULL_BACKUP_PATH"; then
+    if rclone purge "$FULL_BACKUP_PATH"; then
         log_ok "Deleted backup at '$FULL_BACKUP_PATH' successfully."
     else
         log_failed "Deleted backup at '$FULL_BACKUP_PATH' failed."
